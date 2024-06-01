@@ -1,0 +1,214 @@
+######### Anchors start #######
+
+# Placeholder
+
+######### Anchors end #######
+
+allow-lan: false
+log-level: info
+ipv6: true
+keep-alive-interval: 900
+
+profile:
+  store-selected: true
+
+geo-auto-update: true
+geo-update-interval: 23
+geox-url:
+  mmdb: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+  geosite: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+
+dns:
+  enable: true
+  prefer-h3: true
+  listen: :1053
+  ipv6: false
+  enhanced-mode: redir-host
+
+  default-nameserver:
+    - "119.29.29.29#CN Rule"
+
+  nameserver-policy:
+    "geosite:cn,private": "119.29.29.29#CN Rule"
+
+  nameserver:
+    - "1.1.1.1#DNS"
+
+  proxy-server-nameserve:
+    - "119.29.29.29#CN Rule"
+
+sniffer:
+  enable: true
+  override-destination: false
+  sniff: 
+    HTTP:
+      ports: [80, 8080-8880]
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+
+tun:
+  stack: mixed
+  mtu: 9000
+
+# Fill in your subscription in the URL, and the name cannot be repeated
+proxy-providers:
+  一元机场:
+    type: http
+    url: "https://%BACK_END%/sub?target=clash&add_emoji=false&list=true&insert=false&fdn=false&url=%ENCODED_URL%"
+    interval: 82800
+    override:
+      udp: true
+
+proxy-groups:
+  # Custom Proxy-Groups are placed here
+
+  - name: "Proxy"
+    type: select
+    proxies: [URL-Test,Fallback,DIRECT,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "URL-Test"
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+    lazy: true
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+    tolerance: 50
+
+  - name: "Fallback"
+    type: fallback
+    url: http://cp.cloudflare.com
+    interval: 300
+    lazy: true
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "DNS"
+    type: select
+    proxies: [DIRECT,Proxy,URL-Test,Fallback,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "CN Rule"
+    type: select
+    proxies: [DIRECT,Proxy,URL-Test,Fallback,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "Default"
+    type: select
+    proxies: [Proxy,URL-Test,Fallback,DIRECT,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "HK"
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+    lazy: true
+    include-all: true
+    filter: "香港"
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x"
+    tolerance: 50
+
+  - name: "TW"
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+    lazy: true
+    include-all: true
+    filter: "台湾"
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x"
+    tolerance: 50
+
+  - name: "JP"
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+    lazy: true
+    include-all: true
+    filter: "日本"
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x"
+    tolerance: 50
+
+  - name: "SG"
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+    lazy: true
+    include-all: true
+    filter: "新加坡"
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x"
+    tolerance: 50
+
+  - name: "US"
+    type: url-test
+    url: http://cp.cloudflare.com
+    interval: 300
+    lazy: true
+    include-all: true
+    filter: "美国"
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x"
+    tolerance: 50
+
+  - name: "High Multiplier"
+    type: select
+    include-all: true
+    filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x"
+
+  - name: "All"
+    type: select
+    include-all: true
+
+  - name: "Play Store"
+    type: select
+    proxies: [Proxy,URL-Test,Fallback,DIRECT,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "Microsoft"
+    type: select
+    proxies: [Proxy,URL-Test,Fallback,DIRECT,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "TikTok"
+    type: select
+    proxies: [Proxy,URL-Test,Fallback,DIRECT,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "ADs"
+    type: select
+    proxies: [REJECT,DIRECT,Proxy,URL-Test,Fallback,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+  - name: "Analysis"
+    type: select
+    proxies: [REJECT,DIRECT,Proxy,URL-Test,Fallback,HK,TW,JP,SG,US,High Multiplier,All]
+    include-all: true
+    exclude-filter: "倍率:(\\d{2,}|[5-9])|(\\d{2,}|[5-9])x|官网|流量|套餐|订阅|机场"
+
+rules:
+  # Custom rules are placed here
+
+  - GEOSITE,category-ads-all,ADs
+  - DOMAIN-SUFFIX,appcenter.ms,Analysis
+  - DOMAIN-SUFFIX,firebase.io,Analysis
+  - DOMAIN-SUFFIX,crashlytics.com,Analysis
+
+  - DOMAIN-SUFFIX,googleapis.cn,Play Store
+  - GEOSITE,microsoft,Microsoft
+  - GEOSITE,tiktok,TikTok
+
+  - GEOIP,cn,CN Rule
+  - GEOSITE,cn,CN Rule
+
+  - GEOIP,private,DIRECT,no-resolve
+
+  - MATCH,Default
