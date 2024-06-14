@@ -32,7 +32,7 @@ dns:
     "geosite:cn,private": "119.29.29.29#CN Rule"
 
   nameserver:
-    - "1.1.1.1#DNS"
+    - "8.8.8.8#DNS"
 
   proxy-server-nameserve:
     - "119.29.29.29#CN Rule"
